@@ -23,7 +23,6 @@ export default class PessoasController {
 
     //Basicamente um get de tudo - Funciona
     public async index() {
-        //const body = request.body()
 
         const pessoas = await Pessoa.all()
 
@@ -72,7 +71,7 @@ export default class PessoasController {
         }
     }
 
-    //INICIO FUNÇÕES DE EMPRESTIMO
+    //INICIO FUNÇÕES DE EMPRESTIMO -------------------------------------------------------
     public async emprestar({ request }: HttpContextContract) {
         //Considero que vou passar um json
         const body = request.body()

@@ -25,23 +25,32 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.get('/',async () => {return{hello:'world'}})
 
 
+//Rotas de biblioteca_livros -----------------------------------------------------------------------
 
+//listar livros disponiveis em biblioteca passada por parametro
 Route.get('/bibliotecas/biblioteca_livros/:id_biblioteca', 'BibliotecasController.listaDisponiveis')
 
+//Adicionar elemento na relação biblioteca_livros
 Route.post('/bibliotecas/biblioteca_livros', 'BibliotecasController.addBibliotecaLivro')
 
+//Transferir elemento de uma biblioteca pra outra
 Route.put('/bibliotecas/biblioteca_livros', 'BibliotecasController.transfere')
+// ------------------------------------------------------------------------------------------------
 
+//Rotas de emprestimos ----------------------------------------------------------------------------
 
+//Adicionar elemento em Emprestimo
 Route.post('/pessoas/emprestimo', 'PessoasController.emprestar')
 
+//Ver todos os emprestimos -> criei pra debuggar mas vai que é útil
 Route.get('/pessoas/emprestimo', 'PessoasController.getEmprestimos')
 
+//Devolve o livro emprestado
 Route.delete('/pessoas/emprestimo/:id_pessoa/:id_livro','PessoasController.devolver')
+//------------------------------------------------------------------------------------------------
 
 
-
-//Esse apiOnly permite que seja acessados apenas os metodos de Api
+//Rotas do CRUD ----------------------------------------------------------------------------------
 Route.resource('/pessoas', 'PessoasController').apiOnly()
 
 Route.resource('/livros', 'LivrosController').apiOnly()

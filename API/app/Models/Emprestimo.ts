@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column,afterCreate } from '@ioc:Adonis/Lucid/Orm'
-import Database from '@ioc:Adonis/Lucid/Database'
+import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Emprestimo extends BaseModel {
   @column()

@@ -70,10 +70,7 @@ export default class BibliotecasController {
     }
 
     //INICIO FUNÇÕES biblioteca_livro -------------------------------------------------
-    public async getEstoque(){
-
-    }
-
+    
     //adiciona relação biblioteca_livros 
     public async addBibliotecaLivro({request}:HttpContextContract){
         //Considero que vou passar um json
@@ -139,6 +136,7 @@ export default class BibliotecasController {
          return retorna
     }   
     
+    //recebe um request com valores e transfere pro elemento correspondente
     public async transfere({request}: HttpContextContract){
         const body = request.body()
       
