@@ -70,7 +70,9 @@ export default class BibliotecasController {
     }
 
     //INICIO FUNÇÕES biblioteca_livro -------------------------------------------------
+    public async getEstoque(){
 
+    }
 
     //adiciona relação biblioteca_livros 
     public async addBibliotecaLivro({request}:HttpContextContract){
@@ -110,7 +112,6 @@ export default class BibliotecasController {
 
        if(retorno.length > 0){
             return {
-                falhou: "funciona",
                 retorno
             }
        }
@@ -136,6 +137,66 @@ export default class BibliotecasController {
             .where('id_livro',body.id_livro)
        
          return retorna
+    }   
+    
+    public async transfere({request}: HttpContextContract){
+        const body = request.body()
+      
+        const retorna =  
+            await Database
+            .from('biblioteca_livros')
+            .distinct()
+            .select('quant_livros')      
+            .where('id_biblioteca',body.id_origem)
+            .where('id_livro',body.id_livro)
+
+
+        let numero: number 
+        numero = retorna[0].quant_livros
+
+        if(numero > 0){
+            const destino=
+                await Database
+                .from('biblioteca_livros')
+                .distinct()
+                .select('quant_livros')      
+                .where('id_biblioteca',body.id_destino)
+                .where('id_livro',body.id_livro)
+
+            let numeroDestino:number
+            numeroDestino = destino[0].quant_livros
+            
+            
+            
+            if(retorna.length != 0 && destino.length != 0){
+                        
+                const retorno = await Database
+                .from('biblioteca_livros')
+                .update('quant_livros', numero - 1)      
+                .where('id_biblioteca',body.id_origem)
+                .where('id_livro',body.id_livro)
+                
+            
+                await Database
+                .from('biblioteca_livros')
+                .update('quant_livros', numeroDestino+1)      
+                .where('id_biblioteca',body.id_destino)
+                .where('id_livro',body.id_livro)
+           
+                return{
+                    ok: "funcionou",
+                    retorno
+                }
+            }
+          
+        }
+        else{
+            return {erro: "essa biblioteca não possui esse livro"}
+        }
+
     }
+
+
+
 
 }
