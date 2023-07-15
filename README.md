@@ -1,3 +1,9 @@
 # TraineeEmakers_BackEnd
 Api Rest usando Adonis.js para um sistema de biblioteca 
-Primeira alteração, testando o sistemas de commit antes de iniciar o projeto
+
+-> Para executar corretamente Essa Api
+ | -> rode as migrations
+ | -> execute o arquivo.sql que irá configurar os triggres
+ 
+ LEMBRE-se: Sempre que executar um migration:rollback, os triggers serão apagados.
+ 

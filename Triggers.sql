@@ -22,3 +22,16 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER emprestimo_AfterDelete AFTER DELETE ON emprestimos
+FOR EACH ROW 
+BEGIN
+	-- Após deletar um emprestimo devolve o livro emprestado para Biblioteca
+	UPDATE biblioteca_livros
+    SET quant_livros = quant_livros + 1
+    WHERE old.id_livro = id_livro and old.id_biblioteca = id_biblioteca;
+    
+END $$
+DELIMITER ;
