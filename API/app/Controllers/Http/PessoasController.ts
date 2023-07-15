@@ -1,5 +1,7 @@
 //HttpContext possui todos os parametros de requisição - tudo que é enviado da requisição
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Emprestimo from 'App/Models/Emprestimo'
+import Database from '@ioc:Adonis/Lucid/Database'
 import Pessoa from 'App/Models/Pessoa'
 
 export default class PessoasController {
@@ -69,10 +71,54 @@ export default class PessoasController {
             message: "Excluido",            
         }
     }
-        
-
     
+    //INICIO FUNÇÕES DE EMPRESTIMO
+    public async emprestar({request}: HttpContextContract){
+       //Considero que vou passar um json
+       const body = request.body()
+       const teste = await this.retornaEmprestimos(body)
+
+       //Pega o id da biblioteca e do livro
+       const idBiblioteca  = body.id_biblioteca
+       const idLivro = body.id_livro
+       
+       //Se existe esse livro na biblioteca e está disponivel
+       const teste2 =  
+            await Database
+            .from('biblioteca_livros')
+            .select('id_biblioteca','id_livro')
+            .where('id_biblioteca',idBiblioteca)
+            .where('id_livro',idLivro)
+            .where('quant_livros','>',0);
 
 
+       if(teste.length != 0){
+            return {
+                falhou: "Emprestimo ja existente",
+                teste
+            }
+       }
+       else if(teste2.length != 0){       
+            await Emprestimo.create(body)
+            return{
+            retorno: "funciona"
+            }
     
+        }
+       
+       
+   
+    }
+
+    private async retornaEmprestimos(body: Record<string, any>){      
+
+        const retorna =  await Database
+                        .from('emprestimos')
+                        .select('id_pessoa','id_livro')
+                        .where('id_pessoa', body.id_pessoa)
+                        .where('id_livro',body.id_livro)
+ 
+        return retorna
+    }
+     
 }

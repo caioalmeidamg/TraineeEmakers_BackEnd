@@ -1,9 +1,11 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Biblioteca from 'App/Models/Biblioteca'
-
+import Database from '@ioc:Adonis/Lucid/Database'
+import BibliotecaLivro from 'App/Models/BibliotecaLivro'
 
 export default class BibliotecasController {
 
+    //Operações de CRUD ----------------------------------------------------------------
     //Create
     public async store({request, response}: HttpContextContract){
         const body = request.body()
@@ -66,4 +68,74 @@ export default class BibliotecasController {
             message: "Excluido",            
         }
     }
+
+    //INICIO FUNÇÕES biblioteca_livro -------------------------------------------------
+
+
+    //adiciona relação biblioteca_livros 
+    public async addBibliotecaLivro({request}:HttpContextContract){
+        //Considero que vou passar um json
+        const body = request.body()
+        const teste = await this.retornaValores(body)
+        
+        //Se já houver essa relação não inseri
+        if(teste.length != 0){
+             return {
+                 falhou: "Emprestimo ja existente",
+                 teste
+             }
+        }
+        //caso contrario faz a inserção
+        else{
+             await BibliotecaLivro.create(body)
+             return{
+             retorno: "funciona"
+             }
+     
+         }
+        
+        
+        
+     }
+    
+    //Passa a biblioteca por parametro e retorna os livros disponiveis dela 
+    public async listaDisponiveis({params}:HttpContextContract){                
+             
+       const retorno = 
+            await Database
+            .from('biblioteca_livros')
+            .select('id_biblioteca','id_livro')
+            .where('id_biblioteca',params.id_biblioteca)
+            .where('quant_livros','>',0);
+
+       if(retorno.length > 0){
+            return {
+                falhou: "funciona",
+                retorno
+            }
+       }
+       else{        
+            return{
+            retorno: "Biblioteca sem livros disponiveis"
+            }
+    
+        }     
+     
+
+                   
+    } 
+
+    //recebe request retorna se houver tais valores no banco 
+    private async retornaValores(body: Record<string, any>){      
+ 
+         const retorna =  
+            await Database
+            .from('biblioteca_livros')
+            .select('id_biblioteca','id_livro')
+            .where('id_biblioteca',body.id_biblioteca)
+            .where('id_livro',body.id_livro)
+       
+         return retorna
+    }
+
 }

@@ -1,8 +1,17 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, ManyToMany, manyToMany  } from '@ioc:Adonis/Lucid/Orm'
+import Livro from './Livro'
 
 export default class Biblioteca extends BaseModel {
-  
+  //Relações -----------------------------------------
+  @manyToMany(() => Livro, {
+    pivotTable: 'biblioteca_livro',
+    pivotForeignKey: 'id_biblioteca',
+    pivotRelatedForeignKey: 'id_livro'
+  })
+  public livros: ManyToMany<typeof Livro>
+   //---------------------------------------------------
+
   @column({ isPrimary: true })
   public id: number
 

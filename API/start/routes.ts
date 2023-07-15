@@ -24,7 +24,11 @@ import Route from '@ioc:Adonis/Core/Route'
 //achei legal :)
 Route.get('/',async () => {return{hello:'world'}})
 
-//Route.get('livros/disponiveis', 'LivrosController.teste')
+Route.get('/bibliotecas/listarDisponiveis/:id_biblioteca', 'BibliotecasController.listaDisponiveis')
+
+Route.post('/bibliotecas/adicionaLivro', 'BibliotecasController.addBibliotecaLivro')
+
+Route.post('/pessoas/emprestimo', 'PessoasController.emprestar')
 
 //Esse apiOnly permite que seja acessados apenas os metodos de Api
 Route.resource('/pessoas', 'PessoasController').apiOnly()
